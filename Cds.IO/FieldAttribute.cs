@@ -10,7 +10,7 @@ namespace Cds.IO
     [AttributeUsage(AttributeTargets.Property)]
     public class FieldAttribute : Attribute
     {
-        public FieldAttribute([CallerMemberName] string name=null, [CallerLineNumber]int order = 0)
+        public FieldAttribute([CallerMemberName] string name=null, [CallerLineNumber] int order = 0)
         {
             Name = name;
             Order = order;
