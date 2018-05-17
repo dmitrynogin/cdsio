@@ -42,6 +42,12 @@ namespace Cds.IO.Formats.Text
             foreach (var f in section.Schema.Fields)
                 writer.WriteProperty(f);
 
+            foreach (var s in section.Schema.Sections)
+                if (s.IsList)
+                    writer.WriteTable(s);
+                else
+                    writer.WriteSection(s);
+
             writer.WriteFooter(section);
         }
 

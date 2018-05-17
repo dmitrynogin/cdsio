@@ -55,11 +55,7 @@ namespace Cds.IO.Schema
         public IList CreateList() => (IList)Activator.CreateInstance(
             typeof(List<>).MakeGenericType(Type));
 
-        Type Type => IsList 
-            ? Property.PropertyType.GetGenericArguments()[0]
-            : Property.PropertyType;
-
-        public bool IsList => Property.PropertyType.GetInterfaces()
-            .Contains(typeof(IEnumerable));
+        Type Type => Property.PropertyType.GetSimpleType();
+        public bool IsList => Property.PropertyType.IsList();
     }
 }

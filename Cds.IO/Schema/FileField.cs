@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +11,7 @@ namespace Cds.IO.Schema
     class FileField
     {
         public static IEnumerable<FileField> Of(object container) =>
-            from property in container.GetType().GetProperties()
+            from property in container.GetSimpleType().GetProperties()
             let attribute = property.GetCustomAttribute<FieldAttribute>()
             where attribute != null
             orderby attribute.Order
