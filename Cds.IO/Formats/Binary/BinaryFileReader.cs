@@ -11,7 +11,8 @@ namespace Cds.IO.Formats.Binary
 {
     static class BinaryFileReader
     {
-        public static void Read(this FileSchema schema, BinaryReader reader) 
+        public static void Read<T>(this CdsFile<T> file, BinaryReader reader)
+            where T : CdsFile<T>, new()
         {
         }
     }

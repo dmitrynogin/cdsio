@@ -8,10 +8,10 @@ namespace Cds.IO.Schema
 {
     class FileSchema
     {
-        public FileSchema(object container, int level = 1)
+        public FileSchema(Type type, int level = 3)
         {
-            Fields = FileField.Of(container).ToArray();
-            Sections = FileSection.Of(container, level).ToArray();
+            Fields = FileField.Of(type).ToArray();
+            Sections = FileSection.Of(type, level).ToArray();
         }
 
         public IReadOnlyList<FileField> Fields { get; }

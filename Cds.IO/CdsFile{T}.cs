@@ -13,6 +13,8 @@ namespace Cds.IO
     public abstract class CdsFile<T>
         where T : CdsFile<T>, new()
     {
+        internal static FileSchema Schema { get; } = new FileSchema(typeof(T));
+
         public static T Load(string path, bool binary = false) =>
             Load(File.OpenRead(path), binary);
 
@@ -23,26 +25,19 @@ namespace Cds.IO
         public static T Load(BinaryReader reader)
         {
             var file = new T();
-            file.Schema.Read(reader);
+            file.Read(reader);
             return file;
         }
 
         public static T Load(TextReader reader)
         {
             var file = new T();
-            file.Schema.Read(reader);
+            file.Read(reader);
             return file;
         }
 
-        protected CdsFile()
-        {
-            Schema = new FileSchema(this);
-        }
-
-        FileSchema Schema { get; }
-
         public void Save(string path, bool binary = false) =>
-            Save(File.OpenWrite(path), binary);
+            Save(File.Create(path), binary);
 
         public void Save(Stream stream, bool binary = false)
         {
@@ -53,9 +48,18 @@ namespace Cds.IO
         }
 
         public void Save(BinaryWriter writer) =>
-            Schema.Write(writer);
+            this.Write(writer);
 
         public void Save(TextWriter writer) =>
-            Schema.Write(writer);
+            this.Write(writer);
+
+        public override string ToString()
+        {
+            using (var writer = new StringWriter())
+            {
+                Save(writer);
+                return writer.ToString();
+            }
+        }
     }
 }

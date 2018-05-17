@@ -10,43 +10,35 @@ namespace Cds.IO.Schema
 {
     class FileField
     {
-        public static IEnumerable<FileField> Of(object container) =>
-            from property in container.GetSimpleType().GetProperties()
+        public static IEnumerable<FileField> Of(Type type) =>
+            from property in type.GetProperties()
             let attribute = property.GetCustomAttribute<FieldAttribute>()
             where attribute != null
             orderby attribute.Order
-            select new FileField(container, property, attribute);
+            select new FileField(property, attribute);
 
-        FileField(object container, PropertyInfo property, FieldAttribute attribute)
+        FileField(PropertyInfo property, FieldAttribute attribute)
         {
-            Container = container;
             Property = property;
             Attribute = attribute;
         }
 
-        object Container { get; }
         PropertyInfo Property { get; }
         FieldAttribute Attribute { get; }
 
         public string Name => Attribute.Name;
         public Type Type => Property.PropertyType;
 
-        public object Value
+        public object this[object target]
         {
-            get => Property.GetValue(Container);
-            set => Property.SetValue(Container, value);
+            get => Property.GetValue(target);
+            set => Property.SetValue(target, value);
         }
 
-        public object this[object obj]
-        {
-            get => Property.GetValue(obj);
-            set => Property.SetValue(obj, value);
-        }
-
-        public string Format() =>
-            string.Format("{0:" + Attribute.Format + "}", Value);
-
-        public string Format(object obj) =>
-            string.Format("{0:" + Attribute.Format + "}", this[obj]);
+        public string Format(object target) =>
+            string.Format("{0" + 
+                (Attribute.Width == 0 ? "": "," + Attribute.Width) +
+                (Attribute.Format == "" ? "" : ":" + Attribute.Format) +
+                "}", this[target]);
     }
 }

@@ -15,22 +15,25 @@ namespace Cds.IO.Tests
 
             var copy = TestFile.Load("test.txt");
 
+            Assert.AreEqual(
+                source.ToString(), 
+                copy.ToString());
         }
 
         TestFile Demo() => new TestFile
         {
-            Type = "Test File",
-            Version = 1.1m,
-            Header = new TestHeader
+            Type = "Test File", // META
+            Version = 1.1m,     
+            Header = new TestHeader // SECTION
             {
                 Comment = "Hello, world of IO",
-                Details = new HeaderDetails
+                Details = new HeaderDetails // SUBSECTION
                 {
                     Date = new DateTime(2018, 05, 17),
                     Location = "Duvall, WA"
                 }
             },
-            Data = new[]
+            Data = new[] // TABLE
             {
                 new TestData { Depth = 1, Tip = 2 },
                 new TestData { Depth = 2, Tip = 4 }
@@ -54,13 +57,16 @@ namespace Cds.IO.Tests
 
     public class HeaderDetails
     {
-        [Field] public DateTime Date { get; set; }
+        [Field(Format = "yyyy-MM-dd")] public DateTime Date { get; set; }
         [Field] public string Location { get; set; }     
     }
 
     public class TestData
     {
-        [Field] public double Depth { get; set; }
-        [Field] public double Tip { get; set; }
+        [Field("Depth (m)", Format = "N4", Width = 10)]
+        public double Depth { get; set; }
+
+        [Field("Tip (bar)", Format = "N4", Width = 10)]
+        public double Tip { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using Cds.IO.Schema;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -11,34 +12,42 @@ namespace Cds.IO.Formats.Text
 {
     static class TextFileReader
     {
-        public static void Read(this FileSchema schema, TextReader reader) 
+        public static void Read<T>(this CdsFile<T> file, TextReader reader)
+            where T : CdsFile<T>, new()
         {
+            var schema = CdsFile<T>.Schema;
             using (reader)
             {
                 foreach (var field in schema.Fields)
-                    while (!reader.TryReadProperty(field)) ;
+                    while (!reader.TryReadProperty(field, file)) ;
 
                 foreach (var section in schema.Sections)
-                    while (!reader.TryReadSection(section)) ;
+                    while (!reader.TryReadSection(section, file)) ;
             }
         }
-
-        static bool TryReadSection(this TextReader reader, FileSection section)
+        
+        static bool TryReadSection(this TextReader reader, FileSection section, object target)
         {
             while (!reader.TryReadHeader(section)) ;
 
             if (section.IsList)            
             {
+                if (section[target] == null)
+                    section[target] = section.CreateList();
+
                 while (!reader.TryReadColumns(section)) ;
-                while (!reader.TryReadRows(section)) ;
+                while (!reader.TryReadRows(section, (IList)section[target])) ;
                 return true;
             }
 
+            if(section[target] == null)
+                section[target] = section.CreateObject();
+
             foreach (var f in section.Schema.Fields)
-                while (!reader.TryReadProperty(f)) ;
+                while (!reader.TryReadProperty(f, section[target])) ;
             
             foreach (var s in section.Schema.Sections)
-                while (!reader.TryReadSection(s)) ;
+                while (!reader.TryReadSection(s, section[target])) ;
             
             return true;
         }
@@ -48,11 +57,11 @@ namespace Cds.IO.Formats.Text
             var line = reader.ReadLine()?.Trim()
                 ?? throw new EndOfStreamException();
 
-            return line.StartsWith(new string('#', section.Level) + " <<<") &&
+            return line.StartsWith(new string('<', section.Level)) &&
                 line.ToUpper().Contains(section.Name.ToUpper());
         }
 
-        static bool TryReadProperty(this TextReader reader, FileField field)
+        static bool TryReadProperty(this TextReader reader, FileField field, object target)
         {
             var line = reader.ReadLine()?.Trim()
                 ?? throw new EndOfStreamException();
@@ -66,7 +75,7 @@ namespace Cds.IO.Formats.Text
 
             var name = line.Substring(0, split).Trim();
             var value = line.Substring(split + 1).Trim();
-            field.Value = Convert.ChangeType(value, field.Type);
+            field[target] = Convert.ChangeType(value, field.Type);
             return true;
         }
 
@@ -80,7 +89,7 @@ namespace Cds.IO.Formats.Text
         }
 
 
-        static bool TryReadRows(this TextReader reader, FileSection section)
+        static bool TryReadRows(this TextReader reader, FileSection section, IList list)
         {
             var line = reader.ReadLine()?.Trim()
                 ?? throw new EndOfStreamException();
@@ -88,7 +97,7 @@ namespace Cds.IO.Formats.Text
             if (string.IsNullOrWhiteSpace(line))
                 return false;
 
-            if (line.StartsWith(new string('#', section.Level) + " >>>"))
+            if (line.StartsWith(new string('>', section.Level)))
                 return true;
 
             var values = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
@@ -96,7 +105,7 @@ namespace Cds.IO.Formats.Text
             for (int i = 0; i < section.Schema.Fields.Count; i++)
                 section.Schema.Fields[i][row] = Convert.ChangeType(values[i], section.Schema.Fields[i].Type);
 
-            section.List.Add(row);
+            list.Add(row);
             return false;
         }
     }

@@ -10,9 +10,9 @@ namespace Cds.IO.Formats.Binary
 {
     static class BinaryFileWriter
     {
-        public static void Write(this FileSchema schema, BinaryWriter writer)
+        public static void Write<T>(this CdsFile<T> file, BinaryWriter writer)
+            where T : CdsFile<T>, new()
         {
-
         }
     }
 }
