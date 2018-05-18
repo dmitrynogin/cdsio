@@ -22,6 +22,9 @@ namespace Cds.IO.Schema
             Property = property;
             Attribute = attribute;
             Level = level;
+            if (IsTable && !IsList)
+                throw new FormatException($"{Name} table section requires collection property type.");
+
             Schema = new FileSchema(Type, level + 1);
         }
 
@@ -31,6 +34,8 @@ namespace Cds.IO.Schema
 
         public int Level { get; }
         public string Name => Attribute.Name;
+        public bool IsTable => Attribute is TableAttribute;
+        public bool IsGroup => IsList && !IsTable;
 
         public object this[object target]
         {

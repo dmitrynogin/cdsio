@@ -10,7 +10,7 @@ namespace Cds.IO
     [AttributeUsage(AttributeTargets.Property)]
     public class SectionAttribute : Attribute
     {
-        public SectionAttribute([CallerMemberName] string name = null, [CallerLineNumber]int order = 0)
+        public SectionAttribute([CallerMemberName] string name = null, [CallerLineNumber] int order = 0)
         {
             Name = name;
             Order = order;
