@@ -15,6 +15,9 @@ namespace Cds.IO
     {
         internal static FileSchema Schema { get; } = new FileSchema(typeof(T));
 
+        public static T Parse(string text) =>
+            Load(new StringReader(text));
+
         public static T Load(string path, bool binary = false) =>
             Load(File.OpenRead(path), binary);
 
