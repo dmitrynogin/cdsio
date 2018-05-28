@@ -1,3 +1,4 @@
+using Cds.IO.Converters;
 using Cds.IO.Schema;
 using System;
 using System.Collections;
@@ -16,181 +17,111 @@ namespace Cds.IO.Formats.Text
             where T : CdsFile<T>, new()
         {
             var schema = CdsFile<T>.Schema;
-            using (reader)
+            using (var scanner = new TextScanner(reader))
             {
-                foreach (var field in schema.Fields)
-                    if (!reader.TryReadProperty(field, file))
-                        throw new FormatException();
-
-                foreach (var section in schema.Sections)
-                    if(!reader.TryReadSection(section, file))
-                        throw new FormatException();
-            }
-        }
-        
-        static bool TryReadSection(this TextReader reader, FileSection section, object target)
-        {
-            if (!reader.TryReadHeader(section))
-                return false;
-
-            if (section.IsTable)
-                return reader.TryReadTable(section, target);
-
-            if(section.IsGroup)
-                return reader.TryReadGroup(section, target);
-
-            if (section[target] == null)
-                section[target] = section.CreateObject();
-
-            foreach (var f in section.Schema.Fields)
-                if (!reader.TryReadProperty(f, section[target]))
-                    return false;
-
-            foreach (var s in section.Schema.Sections)
-                if (!reader.TryReadSection(s, section[target]))
-                    return false;
-
-            if (!reader.TryReadFooter(section))
-                return false;
-
-            return true;
-        }
-
-        static bool TryReadTable(this TextReader reader, FileSection section, object target)
-        {
-            if (section[target] == null)
-                section[target] = section.CreateList();
-
-            if (!reader.TryReadColumns(section))
-                return false;
-
-            while (reader.TryReadRows(section, (IList)section[target])) ;
-            return true;
-        }
-
-        static bool TryReadGroup(this TextReader reader, FileSection section, object target)
-        {
-            if (section[target] == null)
-                section[target] = section.CreateList();
-            
-            while (reader.TryReadItem(section, (IList)section[target])) ;
-            return true;
-        }
-
-        static bool TryReadItem(this TextReader reader, FileSection section, IList list)
-        {
-            var target = section.CreateObject();
-
-            foreach (var f in section.Schema.Fields)
-                if (!reader.TryReadProperty(f, target))
-                    return false;
-
-            foreach (var s in section.Schema.Sections)
-                if (!reader.TryReadSection(s, target))
-                    return false;
-
-            list.Add(target);
-            return true;
-        }
-
-
-        static bool TryReadHeader(this TextReader reader, FileSection section)
-        {
-            while (true)
-            {
-                var line = reader.ReadLine()?.Trim();
-                if (line == null)
-                    return false;
-
-                if (line.StartsWith(">>>"))
-                    return false;
-
-                if(line.StartsWith(new string('<', section.Level)) &&
-                    line.ToUpper().Contains(section.Name.ToUpper()))
-                    return true;
+                scanner.ReadProperties(schema.Fields, file);
+                scanner.ReadSections(schema.Sections, file);
             }
         }
 
-        static bool TryReadFooter(this TextReader reader, FileSection section)
+        static void ReadProperties(this TextScanner scanner, IReadOnlyList<FileField> fields, object target)
         {
-            while (true)
+            void ReadField(int index)
             {
-                var line = reader.ReadLine()?.Trim();
-                if (line == null)
-                    return false;
+                scanner.SkipWhiteSpace();
+                if (!scanner.Content)
+                    return;
 
-                if (line.StartsWith(new string('>', section.Level)))
-                    return true;
+                for (int i = index; i < fields.Count; i++)
+                {
+                    var field = fields[i];
+                    if (scanner.TryGetProperty(field, out var value))
+                    {
+                        field[target] = FieldConverter.Convert(field.Type, value);
+
+                        if(scanner.Read())
+                            ReadField(i + 1);
+                                                    
+                        return;
+                    }
+                }
+
+                if(scanner.Read())
+                    if(!fields.Take(index).Any(f => scanner.TryGetProperty(f, out var value)))
+                        ReadField(index);
+            }
+
+            ReadField(0);
+        }
+
+        static void ReadSections(this TextScanner scanner, IReadOnlyList<FileSection> sections, object target)
+        {
+            foreach (var section in sections)
+            {
+                while (!scanner.TryGetSectionStart(section))
+                    if (!scanner.Read())
+                        return;
+
+                if (!scanner.Read())
+                    return;
+
+                if (section.IsText)
+                {
+                    if (scanner.TryGetText(out var text))
+                        section[target] = text;
+                }
+                else if (section.IsTable)
+                    section[target] = scanner.ReadTable(section);
+                else if(section.IsGroup)
+                    section[target] = scanner.ReadGroup(section);
+                else
+                {
+                    section[target] = section.CreateObject();
+                    scanner.ReadProperties(section.Schema.Fields, section[target]);
+                    scanner.ReadSections(section.Schema.Sections, section[target]);
+                }
+                                
+                if (!scanner.TrySkipSectionEnd(section))
+                    return;
             }
         }
 
-        static bool TryReadProperty(this TextReader reader, FileField field, object target)
+        static IList ReadTable(this TextScanner scanner, FileSection section)
         {
-            while (true)
+            var list = section.CreateList();
+
+            scanner.SkipWhiteSpace();
+            if (!scanner.TryGetColumns(section))
+                return list;
+
+            while (scanner.Read())
             {
-                var line = reader.ReadLine()?.Trim();
-                if (line == null)
-                    return false;
-
-                if (line.StartsWith(">>>"))
-                    return false;
-
-                var split = line.IndexOf(':');
-                if (split == -1)
-                    continue;
-
-                var name = line.Substring(0, split).Trim();
-                if (field.Name != name)
-                    continue;
-
-                var value = line.Substring(split + 1).Trim();
-                field[target] = Convert.ChangeType(value, field.Type);
-                return true;
-            }
-        }
-
-        static bool TryReadColumns(this TextReader reader, FileSection section)
-        {
-            while (true)
-            {
-                var line = reader.ReadLine()?.Trim();
-                if (line == null)
-                    return false;
-
-                if (line.StartsWith(">>>"))
-                    return false;
-
-                if (Enumerable.SequenceEqual(
-                    from f in section.Schema.Fields
-                    select f.Name.Trim(),
-                    from c in line.Split(',')
-                    select c.Trim()))
-                    return true;
-            }
-        }
-        
-        static bool TryReadRows(this TextReader reader, FileSection section, IList list)
-        {
-            while (true)
-            {
-                var line = reader.ReadLine()?.Trim();
-                if (line == null)
-                    return false;
-
-                if (line.StartsWith(">>>"))
-                    return false;
-
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-
-                var values = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                scanner.SkipWhiteSpace();
+                if (!scanner.TryGetRows(section, out var values))
+                    return list;
+                
                 var row = section.CreateObject();
-                for (int i = 0; i < section.Schema.Fields.Count; i++)
-                    section.Schema.Fields[i][row] = Convert.ChangeType(values[i], section.Schema.Fields[i].Type);
+                foreach (var x in section.Schema.Fields.Zip(values, (f, v) => new { Field = f, Value = v }))
+                    x.Field[row] = FieldConverter.Convert(x.Field.Type, x.Value);
 
                 list.Add(row);
-                return true;
             }
+
+            return list;
+        }
+
+        static IList ReadGroup(this TextScanner scanner, FileSection section)
+        {
+            var list = section.CreateList();
+            while(!scanner.TryGetSectionEnd(section))
+            {
+                var item = section.CreateObject();
+                scanner.ReadProperties(section.Schema.Fields, item);
+                scanner.ReadSections(section.Schema.Sections, item);
+                list.Add(item);
+            }
+
+            return list;
         }
     }
 }

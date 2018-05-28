@@ -23,11 +23,20 @@ namespace Cds.IO.Formats.Text
                 foreach (var s in schema.Sections)
                     if (s.IsTable)
                         writer.WriteTable(s, file);
+                    else if (s.IsText)
+                        writer.WriteText(s, file);
                     else if(s.IsGroup)
                         writer.WriteGroup(s, (IEnumerable)s[file]);
                     else
                         writer.WriteSection(s, file);
             }
+        }
+
+        static void WriteText(this TextWriter writer, FileSection section, object target)
+        {
+            writer.WriteHeader(section);
+            writer.WriteLine(section[target]);
+            writer.WriteFooter(section);
         }
 
         static void WriteTable(this TextWriter writer, FileSection section, object target)
@@ -50,7 +59,9 @@ namespace Cds.IO.Formats.Text
                     writer.WriteProperty(f, item);
 
                 foreach (var s in section.Schema.Sections)
-                    if (s.IsTable)
+                    if (s.IsText)
+                        writer.WriteText(s, item);
+                    else if (s.IsTable)
                         writer.WriteTable(s, item);
                     else if (s.IsGroup)
                         writer.WriteGroup(s, (IEnumerable)s[item]);
@@ -68,7 +79,9 @@ namespace Cds.IO.Formats.Text
                 writer.WriteProperty(f, section[target]);
 
             foreach (var s in section.Schema.Sections)
-                if (s.IsTable)
+                if (s.IsText)
+                    writer.WriteText(s, section[target]);
+                else if (s.IsTable)
                     writer.WriteTable(s, section[target]);
                 else if(s.IsGroup)
                     writer.WriteGroup(s, (IEnumerable)s[section[target]]);
@@ -88,12 +101,18 @@ namespace Cds.IO.Formats.Text
             writer.WriteLine(string.Join(", ", from f in section.Schema.Fields select f.Name));
 
         static void WriteRow(this TextWriter writer, FileSection section, object row) =>
-            writer.WriteLine(string.Join(" ", from f in section.Schema.Fields select f.Format(row)));
+            writer.WriteLine(string.Join(" ", from f in section.Schema.Fields
+                                              let value = f.Format(row) 
+                                              let text = f.Text && value != null ? value.Enquote() : value ?? "N/A"
+                                              select text));
         
         static void WriteFooter(this TextWriter writer, FileSection section) =>
             writer.WriteLine(new string('>', section.Level));
 
         static void WriteProperty(this TextWriter writer, FileField field, object target) =>
             writer.WriteLine($"{field.Name}: {field.Format(target)}");
+
+        static string Enquote(this string text) =>
+            '"' + text.Replace("\"", "\"\"") + '"';
     }
 }

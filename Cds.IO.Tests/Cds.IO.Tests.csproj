@@ -55,6 +55,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cds.IO.Soundings\Cds.IO.Soundings.csproj">
+      <Project>{e525689d-68fb-45ae-9f61-b4d29da5603a}</Project>
+      <Name>Cds.IO.Soundings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cds.IO.Vane\Cds.IO.Vane.csproj">
+      <Project>{a4e2aa03-6d35-44e0-b877-7912e0b36fb7}</Project>
+      <Name>Cds.IO.Vane</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cds.IO\Cds.IO.csproj">
       <Project>{0fa225b0-00c5-4740-bc1c-c7c11b627ae3}</Project>
       <Name>Cds.IO</Name>
