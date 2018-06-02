@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A1B95584-DF2F-4EA9-8C36-4336B9F95148}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Demo</RootNamespace>
-    <AssemblyName>Demo</AssemblyName>
+    <ProjectGuid>{E525689D-68FB-45AE-9F61-B4D29DA5603A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cds.IO</RootNamespace>
+    <AssemblyName>Cds.IO.Soundings</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -42,21 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="AppFile{T}.cs" />
+    <Compile Include="CoordinateData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SoundingCoordinates.cs" />
+    <Compile Include="SoundingFile{T}.cs" />
+    <Compile Include="SoundingInfo.cs" />
+    <Compile Include="SourceApplication.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Cds.IO.Soundings\Cds.IO.Soundings.csproj">
-      <Project>{e525689d-68fb-45ae-9f61-b4d29da5603a}</Project>
-      <Name>Cds.IO.Soundings</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cds.IO.Vane\Cds.IO.Vane.csproj">
-      <Project>{a4e2aa03-6d35-44e0-b877-7912e0b36fb7}</Project>
-      <Name>Cds.IO.Vane</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cds.IO\Cds.IO.csproj">
       <Project>{0fa225b0-00c5-4740-bc1c-c7c11b627ae3}</Project>
       <Name>Cds.IO</Name>

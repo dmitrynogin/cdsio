@@ -14,7 +14,7 @@ namespace Cds.IO.Schema
             from property in type.GetProperties()
             let attribute = property.GetCustomAttribute<SectionAttribute>()
             where attribute != null
-            orderby attribute.Order
+            orderby property.DeclaringType.GetLevel(), attribute.Order
             select new FileSection(property, attribute, level);
 
         FileSection(PropertyInfo property, SectionAttribute attribute, int level)
@@ -22,8 +22,12 @@ namespace Cds.IO.Schema
             Property = property;
             Attribute = attribute;
             Level = level;
+
             if (IsTable && !IsList)
                 throw new FormatException($"{Name} table section requires collection property type.");
+
+            if (IsText && !IsString)
+                throw new FormatException($"{Name} text section requires string property type.");
 
             Schema = new FileSchema(Type, level + 1);
         }
@@ -34,9 +38,10 @@ namespace Cds.IO.Schema
 
         public int Level { get; }
         public string Name => Attribute.Name;
+        public bool IsText => Attribute is TextAttribute;        
         public bool IsTable => Attribute is TableAttribute;
         public bool IsGroup => IsList && !IsTable;
-
+        
         public object this[object target]
         {
             get => Property.GetValue(target);
@@ -51,7 +56,9 @@ namespace Cds.IO.Schema
             ? Property.PropertyType.GetGenericArguments()[0]
             : Property.PropertyType;
 
-        public bool IsList => Property.PropertyType.GetInterfaces()
-            .Contains(typeof(IEnumerable));
+        public bool IsString => Property.PropertyType == typeof(string);
+        public bool IsList => 
+            !IsString && 
+            Property.PropertyType.GetInterfaces().Contains(typeof(IEnumerable));
     }
 }

@@ -40,18 +40,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\DefaultConverter.cs" />
+    <Compile Include="Converters\FieldConverter.cs" />
+    <Compile Include="Converters\VersionConverter.cs" />
     <Compile Include="Formats\Binary\BinaryFileReader.cs" />
     <Compile Include="Formats\Binary\BinaryFileWriter.cs" />
     <Compile Include="CdsFile{T}.cs" />
     <Compile Include="FieldAttribute.cs" />
+    <Compile Include="Formats\Text\RowParser.cs" />
+    <Compile Include="Formats\Text\TextFingerprint.cs" />
+    <Compile Include="Formats\Text\TextScanner.cs" />
     <Compile Include="Schema\FileField.cs" />
     <Compile Include="Schema\FileSchema.cs" />
     <Compile Include="Schema\FileSection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Schema\InheritanceLevel.cs" />
     <Compile Include="TableAttribute.cs" />
     <Compile Include="SectionAttribute.cs" />
     <Compile Include="Formats\Text\TextFileReader.cs" />
     <Compile Include="Formats\Text\TextFileWriter.cs" />
+    <Compile Include="TextAttribute.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
