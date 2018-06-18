@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0FA225B0-00C5-4740-BC1C-C7C11B627AE3}</ProjectGuid>
+    <ProjectGuid>{CB358A98-543B-4C42-939B-76C0AFE3FDD7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Cds.IO</RootNamespace>
-    <AssemblyName>Cds.IO</AssemblyName>
+    <AssemblyName>Cds.IO.Dissipation</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,27 +40,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\DefaultConverter.cs" />
-    <Compile Include="Converters\FieldConverter.cs" />
-    <Compile Include="Converters\VersionConverter.cs" />
-    <Compile Include="FileBackup.cs" />
-    <Compile Include="Formats\Binary\BinaryFileReader.cs" />
-    <Compile Include="Formats\Binary\BinaryFileWriter.cs" />
-    <Compile Include="CdsFile{T}.cs" />
-    <Compile Include="FieldAttribute.cs" />
-    <Compile Include="Formats\Text\RowParser.cs" />
-    <Compile Include="Formats\Text\TextFingerprint.cs" />
-    <Compile Include="Formats\Text\TextScanner.cs" />
-    <Compile Include="Schema\FileField.cs" />
-    <Compile Include="Schema\FileSchema.cs" />
-    <Compile Include="Schema\FileSection.cs" />
+    <Compile Include="DissipationData.cs" />
+    <Compile Include="DissipationFile.cs" />
+    <Compile Include="Legacy\PptFile.cs" />
+    <Compile Include="Legacy\PpdFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Schema\InheritanceLevel.cs" />
-    <Compile Include="TableAttribute.cs" />
-    <Compile Include="SectionAttribute.cs" />
-    <Compile Include="Formats\Text\TextFileReader.cs" />
-    <Compile Include="Formats\Text\TextFileWriter.cs" />
-    <Compile Include="TextAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cds.IO.Soundings\Cds.IO.Soundings.csproj">
+      <Project>{e525689d-68fb-45ae-9f61-b4d29da5603a}</Project>
+      <Name>Cds.IO.Soundings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cds.IO\Cds.IO.csproj">
+      <Project>{0fa225b0-00c5-4740-bc1c-c7c11b627ae3}</Project>
+      <Name>Cds.IO</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

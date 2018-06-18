@@ -39,8 +39,14 @@ namespace Cds.IO
             return file;
         }
 
-        public void Save(string path, bool binary = false) =>
-            Save(File.Create(path), binary);
+        public void Save(string path, bool binary = false)
+        {
+            using (var backup = new FileBackup(path))
+            {
+                Save(File.Create(path), binary);
+                backup.Delete();
+            }
+        }
 
         public void Save(Stream stream, bool binary = false)
         {
