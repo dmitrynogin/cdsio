@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace Cds.IO
         where T : SoundingFile<T>, new()
     {
         [Section] public SoundingInfo Sounding { get; set; }
-        [Section] public SoundingCoordinates Coordinates { get; set; }
+        [Section("Deployment Equipment")] public DeploymentEquipment DeploymentEquipment { get; set; }
+        [Section] public IList<SoundingCoordinates> Coordinates { get; set; }
     }
 }

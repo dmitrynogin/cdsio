@@ -49,6 +49,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cds.IO.Cones\Cds.IO.Cones.csproj">
+      <Project>{2a9b9981-76dc-4820-87d1-4efdde0d2ac2}</Project>
+      <Name>Cds.IO.Cones</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cds.IO.Soundings\Cds.IO.Soundings.csproj">
       <Project>{e525689d-68fb-45ae-9f61-b4d29da5603a}</Project>
       <Name>Cds.IO.Soundings</Name>

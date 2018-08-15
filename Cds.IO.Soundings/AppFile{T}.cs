@@ -12,7 +12,9 @@ namespace Cds.IO
         [Field] public string Type { get; set; }
         [Field] public Version Version { get; set; }
         [Field(Format = "yyyy-MM-dd HH:mm:ss")] public DateTime Created { get; set; }
+        [Field(Format = "yyyy-MM-dd HH:mm:ss")] public DateTime Completed { get; set; }
         [Field] public string FilePath { get; set; }
         [Section] public SourceApplication Application { get; set; }
+        [Section] public SystemInfo System { get; set; }
     }
 }

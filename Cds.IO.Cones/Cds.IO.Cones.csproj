@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Cds.IO</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cds.IO.Soundings\Cds.IO.Soundings.csproj" />
+    <ProjectReference Include="..\Cds.IO\Cds.IO.csproj" />
+  </ItemGroup>
+
+</Project>

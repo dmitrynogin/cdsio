@@ -42,11 +42,13 @@
   <ItemGroup>
     <Compile Include="AppFile{T}.cs" />
     <Compile Include="CoordinateData.cs" />
+    <Compile Include="DeploymentEquipment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoundingCoordinates.cs" />
     <Compile Include="SoundingFile{T}.cs" />
     <Compile Include="SoundingInfo.cs" />
     <Compile Include="SourceApplication.cs" />
+    <Compile Include="SystemInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cds.IO\Cds.IO.csproj">

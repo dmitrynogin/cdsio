@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Cds.IO
 {
     public class SoundingCoordinates
     {
+        [Field(Format = "yyyy-MM-dd HH:mm:ss")] public DateTime Captured { get; set;  }
         [Field("Coordinate Source")] public string CoordinateSource { get; set; }
         [Field("Coordinate System")] public string CoordinateSystem { get; set; }
         [Field("Coordinate Datum")] public string CoordinateDatum { get; set; }

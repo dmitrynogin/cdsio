@@ -32,6 +32,9 @@ namespace Cds.IO.Formats.Text
                 if (!scanner.Content)
                     return;
 
+                if (fields.Take(index).Any(f => scanner.TryGetProperty(f, out var value)))
+                    return;
+
                 for (int i = index; i < fields.Count; i++)
                 {
                     var field = fields[i];
