@@ -8,6 +8,7 @@ namespace Cds.IO.Cones
         [Field("Cone Type")] public string ConeType { get; set; }
         [Field("Net Area Ratio")] public double NetAreaRatio { get; set; }
         [Table("AD Info")] public IList<ADInfo> ADInfo { get; set; }
-        [Table] public IList<ConeChannel> Channels { get; set; }
+        [Section] public ConeMetrics Metrics { get; set; }
+        [Field("Saturation Fluid")] public string SaturationFluid { get; set; }
     }
 }

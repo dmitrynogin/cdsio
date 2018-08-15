@@ -9,5 +9,7 @@ namespace Cds.IO.Cones
         [Field] public string OffsetUnits { get; set; }
         [Field] public double? Area { get; set; }
         [Field] public string AreaUnits { get; set; }
+        [Field] public int SensorOffset { get; set; }
+        [Field] public string SensorOffsetUnits { get; set; }
     }
 }

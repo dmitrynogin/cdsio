@@ -10,6 +10,7 @@ namespace Cds.IO
         [Field] public string Location { get; set; }
         [Field("Sounding ID")] public string SoundingID { get; set; }
         [Field] public string Crew { get; set; }
+        [Field] public string Oversight { get; set; }
         [Field("Base Filename")] public string BaseFilename { get; set; }
         [Field(Format = "yyyy-MM-dd HH:mm:ss")] public DateTime Started { get; set; }
 

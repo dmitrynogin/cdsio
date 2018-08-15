@@ -54,6 +54,7 @@ namespace Demo
                     Location = "STP",
                     SoundingID = "CPT18-01",     
                     Crew = "BKIR/QROB",
+                    Oversight = "JGRG",
                     BaseFilename = "18-04073_CP01",
                     Started = DateTime.Now,
                 },
@@ -105,12 +106,13 @@ namespace Demo
                             }
                         }
                     }
-                },
+                },                
                 Cone = new ConeInfo
                 {
                     ConeID = "AD329",
                     ConeType = "A15-T1500-F15-U500",
                     NetAreaRatio = 0.8,
+                    SaturationFluid = "Silicon Oil",
                     ADInfo = new []
                     {
                         new ADInfo
@@ -119,69 +121,474 @@ namespace Demo
                             Resolution = 16
                         }
                     },
-                    Channels = new []
+                    Metrics = new ConeMetrics
                     {
-                        new ConeChannel
+                        DepthIncrement = 25
+                    }
+                },
+                Modules = new[]
+                {
+                    new ConeModule
+                    {
+                        Name = "Cone",
+                        Offset = 0,
+                        Length = 600,
+                        FrictionReducer = 0,
+                        Channels = new []
                         {
-                            Name = "qc",
-                            Capacity = 1500,
-                            CapacityUnits ="bar",
-                            Offset = 0,
-                            OffsetUnits = "mm",
-                            Area = 15,
-                            AreaUnits = "cm2"
-                        },
-                        new ConeChannel
+                            new ConeChannel
+                            {
+                                Name = "qc",
+                                Capacity = 1500,
+                                CapacityUnits ="bar",
+                                Offset = 0,
+                                OffsetUnits = "mm",
+                                Area = 15,
+                                AreaUnits = "cm2",
+                                SensorOffset = 0,
+                                SensorOffsetUnits = "mm",
+                            },
+                            new ConeChannel
+                            {
+                                Name = "fs",
+                                Capacity = 15,
+                                CapacityUnits ="bar",
+                                Offset = 100,
+                                OffsetUnits = "mm",
+                                Area = 225,
+                                AreaUnits = "cm2",
+                                SensorOffset = 100,
+                                SensorOffsetUnits = "mm",
+                            },
+                            new ConeChannel
+                            {
+                                Name = "u2",
+                                Capacity = 350,
+                                CapacityUnits ="kPa",
+                                Offset = 0,
+                                OffsetUnits = "mm",
+                                SensorOffset = 0,
+                                SensorOffsetUnits = "mm",
+                            },
+                            new ConeChannel
+                            {
+                                Name = "Sx",
+                                Offset = 200,
+                                OffsetUnits = "mm",
+                                SensorOffset = 200,
+                                SensorOffsetUnits = "mm",
+                            },
+                            new ConeChannel
+                            {
+                                Name = "Sz",
+                                Offset = 200,
+                                OffsetUnits = "mm",
+                                SensorOffset = 200,
+                                SensorOffsetUnits = "mm",
+                            },
+                            new ConeChannel
+                            {
+                                Name = "Temp",
+                                Offset = 0,
+                                OffsetUnits = "mm",
+                                SensorOffset = 0,
+                                SensorOffsetUnits = "mm",
+                            },
+                            new ConeChannel
+                            {
+                                Name = "InclX",
+                                Capacity = 30,
+                                CapacityUnits = "deg",
+                                Offset = 200,
+                                OffsetUnits = "mm",
+                                SensorOffset = 200,
+                                SensorOffsetUnits = "mm",
+                            },
+                            new ConeChannel
+                            {
+                                Name = "InclY",
+                                Capacity = 30,
+                                CapacityUnits = "deg",
+                                Offset = 200,
+                                OffsetUnits = "mm",
+                                SensorOffset = 200,
+                                SensorOffsetUnits = "mm",
+                            }
+                        }
+                    },
+                    new ConeModule
+                    {
+                        Name = "Resistivity Module",
+                        Offset = 650,
+                        Length = 250,
+                        AdapterLength = 50,
+                        Channels = new []
                         {
-                            Name = "fs",
-                            Capacity = 15,
-                            CapacityUnits ="bar",
-                            Offset = 100,
-                            OffsetUnits = "mm",
-                            Area = 225,
-                            AreaUnits = "cm2"
-                        },
-                        new ConeChannel
+                            new ConeChannel
+                            {
+                                Name = "R",
+                                Capacity = null,
+                                CapacityUnits ="Ohm-m",
+                                SensorOffset = 200,
+                                SensorOffsetUnits = "mm",
+                                Offset = 850,
+                                OffsetUnits = "mm"
+                            }
+                        }
+                    },
+                },
+                Baselines = new []
+                {
+                    new ConeBaseline
+                    {
+                        Name = "Initial Bluebox",
+                        Time = DateTime.Now,
+                        Levels = new [] 
                         {
-                            Name = "u2",
-                            Capacity = 350,
-                            CapacityUnits ="kPa",
-                            Offset = 0,
-                            OffsetUnits = "mm"
-                        },
-                        new ConeChannel
+                            new BaselineLevel
+                            {
+                                Name = "qc",
+                                Value = -0.5100, ValueUnits = "V",
+                                Raw = -0.5100, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "ft",
+                                Value = -0.5101, ValueUnits = "V",
+                                Raw = -0.5101, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "u2",
+                                Value = -0.5102, ValueUnits = "V",
+                                Raw = -0.5102, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "Temp",
+                                Value = 2.576, ValueUnits = "V",
+                                Raw = 2.567, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclX",
+                                Value = 0.123, ValueUnits = "V",
+                                Raw = 0.123, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclY",
+                                Value = 0.245, ValueUnits = "V",
+                                Raw = 0.254, RawUnits = "V"
+                            }
+                        }
+                    },
+                    new ConeBaseline
+                    {
+                        Name = "Initial Computer",
+                        Time = DateTime.Now,
+                        Levels = new []
                         {
-                            Name = "Sx",
-                            Offset = 200,
-                            OffsetUnits = "mm"
-                        },
-                        new ConeChannel
+                            new BaselineLevel
+                            {
+                                Name = "qc",
+                                Value = -0.5100, ValueUnits = "V",
+                                Raw = -0.5100, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "ft",
+                                Value = -0.5101, ValueUnits = "V",
+                                Raw = -0.5101, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "u2",
+                                Value = -0.5102, ValueUnits = "V",
+                                Raw = -0.5102, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "Temp",
+                                Value = 2.576, ValueUnits = "V",
+                                Raw = 2.567, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclX",
+                                Value = 0.123, ValueUnits = "V",
+                                Raw = 0.123, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclY",
+                                Value = 0.245, ValueUnits = "V",
+                                Raw = 0.254, RawUnits = "V"
+                            }
+                        }
+                    },
+                    new ConeBaseline
+                    {
+                        Name = "Final Bluebox",
+                        Time = DateTime.Now,
+                        Levels = new []
                         {
-                            Name = "Sz",
-                            Offset = 200,
-                            OffsetUnits = "mm"
-                        },
-                        new ConeChannel
+                            new BaselineLevel
+                            {
+                                Name = "qc",
+                                Value = -0.5100, ValueUnits = "V",
+                                Raw = -0.5100, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "ft",
+                                Value = -0.5101, ValueUnits = "V",
+                                Raw = -0.5101, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "u2",
+                                Value = -0.5102, ValueUnits = "V",
+                                Raw = -0.5102, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "Temp",
+                                Value = 2.576, ValueUnits = "V",
+                                Raw = 2.567, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclX",
+                                Value = 0.123, ValueUnits = "V",
+                                Raw = 0.123, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclY",
+                                Value = 0.245, ValueUnits = "V",
+                                Raw = 0.254, RawUnits = "V"
+                            }
+                        }
+                    },
+                    new ConeBaseline
+                    {
+                        Name = "Final Computer",
+                        Time = DateTime.Now,
+                        Levels = new []
                         {
-                            Name = "Temp",
-                            Offset = 0,
-                            OffsetUnits = "mm"
-                        },
-                        new ConeChannel
+                            new BaselineLevel
+                            {
+                                Name = "qc",
+                                Value = -0.5100, ValueUnits = "V",
+                                Raw = -0.5100, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "ft",
+                                Value = -0.5101, ValueUnits = "V",
+                                Raw = -0.5101, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "u2",
+                                Value = -0.5102, ValueUnits = "V",
+                                Raw = -0.5102, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "Temp",
+                                Value = 2.576, ValueUnits = "V",
+                                Raw = 2.567, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclX",
+                                Value = 0.123, ValueUnits = "V",
+                                Raw = 0.123, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclY",
+                                Value = 0.245, ValueUnits = "V",
+                                Raw = 0.254, RawUnits = "V"
+                            }
+                        }
+                    },
+                    new ConeBaseline
+                    {
+                        Name = "Initial Delta",
+                        Time = DateTime.Now,
+                        Levels = new []
                         {
-                            Name = "InclX",
-                            Capacity = 30,
-                            CapacityUnits = "deg",
-                            Offset = 200,
-                            OffsetUnits = "mm"
-                        },
-                        new ConeChannel
+                            new BaselineLevel
+                            {
+                                Name = "qc",
+                                Value = -0.5100, ValueUnits = "V",
+                                Raw = -0.5100, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "ft",
+                                Value = -0.5101, ValueUnits = "V",
+                                Raw = -0.5101, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "u2",
+                                Value = -0.5102, ValueUnits = "V",
+                                Raw = -0.5102, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "Temp",
+                                Value = 2.576, ValueUnits = "V",
+                                Raw = 2.567, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclX",
+                                Value = 0.123, ValueUnits = "V",
+                                Raw = 0.123, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclY",
+                                Value = 0.245, ValueUnits = "V",
+                                Raw = 0.254, RawUnits = "V"
+                            }
+                        }
+                    },
+                    new ConeBaseline
+                    {
+                        Name = "Final Delta",
+                        Time = DateTime.Now,
+                        Levels = new []
                         {
-                            Name = "InclY",
-                            Capacity = 30,
-                            CapacityUnits = "deg",
-                            Offset = 200,
-                            OffsetUnits = "mm"
+                            new BaselineLevel
+                            {
+                                Name = "qc",
+                                Value = -0.5100, ValueUnits = "V",
+                                Raw = -0.5100, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "ft",
+                                Value = -0.5101, ValueUnits = "V",
+                                Raw = -0.5101, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "u2",
+                                Value = -0.5102, ValueUnits = "V",
+                                Raw = -0.5102, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "Temp",
+                                Value = 2.576, ValueUnits = "V",
+                                Raw = 2.567, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclX",
+                                Value = 0.123, ValueUnits = "V",
+                                Raw = 0.123, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclY",
+                                Value = 0.245, ValueUnits = "V",
+                                Raw = 0.254, RawUnits = "V"
+                            }
+                        }
+                    },
+                    new ConeBaseline
+                    {
+                        Name = "Computer Delta",
+                        Time = DateTime.Now,
+                        Levels = new []
+                        {
+                            new BaselineLevel
+                            {
+                                Name = "qc",
+                                Value = -0.5100, ValueUnits = "V",
+                                Raw = -0.5100, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "ft",
+                                Value = -0.5101, ValueUnits = "V",
+                                Raw = -0.5101, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "u2",
+                                Value = -0.5102, ValueUnits = "V",
+                                Raw = -0.5102, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "Temp",
+                                Value = 2.576, ValueUnits = "V",
+                                Raw = 2.567, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclX",
+                                Value = 0.123, ValueUnits = "V",
+                                Raw = 0.123, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclY",
+                                Value = 0.245, ValueUnits = "V",
+                                Raw = 0.254, RawUnits = "V"
+                            }
+                        }
+                    },
+                    new ConeBaseline
+                    {
+                        Name = "Bluebox Delta",
+                        Time = DateTime.Now,
+                        Levels = new []
+                        {
+                            new BaselineLevel
+                            {
+                                Name = "qc",
+                                Value = -0.5100, ValueUnits = "V",
+                                Raw = -0.5100, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "ft",
+                                Value = -0.5101, ValueUnits = "V",
+                                Raw = -0.5101, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "u2",
+                                Value = -0.5102, ValueUnits = "V",
+                                Raw = -0.5102, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "Temp",
+                                Value = 2.576, ValueUnits = "V",
+                                Raw = 2.567, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclX",
+                                Value = 0.123, ValueUnits = "V",
+                                Raw = 0.123, RawUnits = "V"
+                            },
+                            new BaselineLevel
+                            {
+                                Name = "InclY",
+                                Value = 0.245, ValueUnits = "V",
+                                Raw = 0.254, RawUnits = "V"
+                            }
                         }
                     }
                 }
