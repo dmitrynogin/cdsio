@@ -4,7 +4,7 @@ namespace Cds.IO
 {
     public class CoordinateData
     {
-        [Field(Format = "yyyy-MM-dd HH:mm:ss")] public string Captured { get; set; }
+        [Field(Format = "yyyy-MM-dd HH:mm:ss")] public DateTime Captured { get; set; }
         [Field] public double? Northing { get; set; }
         [Field] public double? Easting { get; set; }
         [Field] public double? Latitude { get; set; }

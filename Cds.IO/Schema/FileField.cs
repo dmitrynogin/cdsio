@@ -28,7 +28,7 @@ namespace Cds.IO.Schema
 
         public string Name => Attribute.Name;
         public Type Type => Property.PropertyType;
-        public bool Text => Type == typeof(string);
+        public bool Text => Type == typeof(string) || Type == typeof(DateTime) || Attribute.Quoted;
 
         public object this[object target]
         {

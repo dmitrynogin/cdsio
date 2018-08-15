@@ -20,5 +20,6 @@ namespace Cds.IO
         public int Order { get; }
         public string Format { get; set; } = "";
         public int Width { get; set; } = 0;
+        public bool Quoted { get; set; } = false;
     }
 }

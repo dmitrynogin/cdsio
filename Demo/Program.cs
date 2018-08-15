@@ -83,7 +83,7 @@ namespace Demo
                         {
                             new CoordinateData
                             {
-                                Captured = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                                Captured = DateTime.Now,
                                 Northing = 240245.319,
                                 Easting = 151599.147,
                                 Latitude = null,
@@ -94,7 +94,7 @@ namespace Demo
                             },
                             new CoordinateData
                             {
-                                Captured = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                                Captured = DateTime.Now,
                                 Northing = 240245.123,
                                 Easting = 151599.567,
                                 Latitude = null,
